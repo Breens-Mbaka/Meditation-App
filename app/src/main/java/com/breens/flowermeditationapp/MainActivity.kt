@@ -98,7 +98,6 @@ class MainActivity : ComponentActivity() {
     fun SearchInputComponent() {
         OutlinedTextField(
             value = "", onValueChange = {},
-            shape = RoundedCornerShape(8.dp),
             placeholder = { Text(text = "Search", fontFamily = nunitoLight) },
             leadingIcon = {
                 Icon(
