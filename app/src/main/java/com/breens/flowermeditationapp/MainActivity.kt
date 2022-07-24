@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -24,6 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.breens.flowermeditationapp.ui.theme.*
+import com.breens.flowermeditationapp.ui.utils.FILTER_CONTENT_LIST
+import com.breens.flowermeditationapp.ui.utils.FilterContent
+import com.breens.flowermeditationapp.ui.utils.MEDITATION_TYPE_LIST
+import com.breens.flowermeditationapp.ui.utils.MeditationType
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +43,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     HeaderProfileComponent()
                     SearchInputComponent()
+                    FilterOptionsComponent()
+                    MeditationTypesComponent()
                 }
             }
         }
@@ -116,5 +124,104 @@ class MainActivity : ComponentActivity() {
                 trailingIconColor = Black
             )
         )
+    }
+
+    @Composable
+    fun FilterOptionsComponent() {
+        val filterOptions = FILTER_CONTENT_LIST
+        LazyRow(
+            Modifier.padding(top = 15.dp, start = 15.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            items(filterOptions.size) {
+                ChipComponent(filter = filterOptions[it])
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun ChipComponent(filter: FilterContent) {
+        val contentColor = filter.contentColor
+        val chipBackground = filter.backgroundColor
+        val filterText = filter.filterText
+        Chip(
+            onClick = { /*TODO*/ },
+            colors = ChipDefaults.chipColors(
+                contentColor = contentColor,
+                backgroundColor = chipBackground
+            ),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(text = filterText, fontFamily = nunitoMedium)
+        }
+    }
+
+    @Composable
+    fun MeditationTypesComponent() {
+        val meditationOptions = MEDITATION_TYPE_LIST
+        LazyColumn(
+            Modifier.padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            items(meditationOptions.size) {
+                MeditationOptionComponent(meditationTypes = meditationOptions[it])
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun MeditationOptionComponent(meditationTypes: MeditationType) {
+        Card(
+            shape = RoundedCornerShape(14.dp),
+            modifier = Modifier.fillMaxSize(),
+            backgroundColor = meditationTypes.backgroundColor
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier.padding(20.dp)
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Chip(
+                        onClick = { /*TODO*/ },
+                        colors = ChipDefaults.chipColors(
+                            contentColor = Black,
+                            backgroundColor = meditationTypes.timeBackgroundColor
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(text = meditationTypes.duration, fontFamily = nunitoMedium)
+                    }
+                    Chip(
+                        onClick = { /*TODO*/ },
+                        colors = ChipDefaults.chipColors(
+                            contentColor = Black,
+                            backgroundColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text(text = meditationTypes.teacher, fontFamily = nunitoMedium)
+                    }
+                }
+
+                Text(
+                    text = meditationTypes.title,
+                    fontFamily = nunitoBold,
+                    fontSize = 18.sp,
+                    color = meditationTypes.contentColor,
+                    textAlign = TextAlign.Start
+                )
+
+                Text(
+                    text = meditationTypes.description,
+                    fontFamily = nunitoLight,
+                    fontSize = 16.sp,
+                    color = meditationTypes.contentColor,
+                    textAlign = TextAlign.Start
+                )
+            }
+        }
     }
 }
